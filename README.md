@@ -9,8 +9,8 @@ https://youtu.be/z_RaTJrNseA
 ### 1. Clone repository
  
 ```bash
-git clone https://github.com/<username>/pubsub-aggregator.git
-cd pubsub-aggregator
+git clone https://github.com/LuthfanThamrin/UTS-Pub-Sub-Aggregator.git
+cd UTS-Pub-Sub-Aggregator
 ```
  
 ### 2. Build Docker image
