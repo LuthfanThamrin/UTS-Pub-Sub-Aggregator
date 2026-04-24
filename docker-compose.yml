@@ -1,0 +1,48 @@
+version: "3.9"
+
+services:
+
+  aggregator:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: aggregator
+    ports:
+      - "8080:8080"
+    volumes:
+      - aggdata:/app/data
+    environment:
+      DB_PATH: /app/data/dedup.db
+    networks:
+      - pubsub-net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c",
+             "import urllib.request; urllib.request.urlopen('http://localhost:8080/health')"]
+      interval: 15s
+      timeout: 5s
+      start_period: 15s
+      retries: 3
+
+  publisher:
+    build:
+      context: .
+      dockerfile: Dockerfile.publisher
+    container_name: publisher
+    depends_on:
+      aggregator:
+        condition: service_healthy
+    environment:
+      AGGREGATOR_URL: http://aggregator:8080
+      EVENT_COUNT: "5000"
+      DUPLICATE_RATIO: "0.20"
+    networks:
+      - pubsub-net
+    restart: "no"
+
+volumes:
+  aggdata:
+
+networks:
+  pubsub-net:
+    driver: bridge

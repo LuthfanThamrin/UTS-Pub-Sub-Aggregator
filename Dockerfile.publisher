@@ -1,0 +1,12 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+COPY publisher.py .
+
+ENV AGGREGATOR_URL=http://aggregator:8080
+ENV EVENT_COUNT=5000
+ENV DUPLICATE_RATIO=0.2
+ENV BATCH_SIZE=100
+
+CMD ["python", "publisher.py"]
